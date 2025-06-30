@@ -1,95 +1,79 @@
-// Import các thư viện cần thiết
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require('axios');
 
-// Khởi tạo ứng dụng Express
 const app = express();
-const port = process.env.PORT || 3000; // Sử dụng port từ biến môi trường hoặc mặc định 3000
+const port = process.env.PORT || 3000;
 
-// Khởi tạo mảng lưu trữ sản phẩm và đơn hàng
-let products = []; // Mảng lưu trữ danh sách sản phẩm
-let orders = [];   // Mảng lưu trữ lịch sử đơn hàng
+// Cấu hình Google Sheets
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYqkF3nuNt8NZ55j3ft-Klh0evqZBxY-mWJGQ7UXdn6jaUB2Eu7EIOsAKdoRmK2d7kdg/exec";
+const SECRET_KEY = process.env.SECRET_KEY; // Lấy từ biến môi trường
 
-// Cấu hình middleware
-app.use(cors()); // Cho phép truy cập từ các domain khác (Cross-Origin Resource Sharing)
-app.use(bodyParser.urlencoded({ extended: false })); // Xử lý dữ liệu form URL-encoded
-app.use(bodyParser.json()); // Xử lý dữ liệu JSON
+let products = [];
+let orders = [];
 
-// =============================================
-// ROUTE: KIỂM TRA HOẠT ĐỘNG CỦA SERVER
-// =============================================
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Root check
 app.get('/', (req, res) => {
-    res.send("API deployment successful"); // Trả về thông báo khi truy cập root
+    res.send("API deployment successful");
 });
 
-// =============================================
-// ROUTE: QUẢN LÝ SẢN PHẨM
-// =============================================
-
-// Thêm sản phẩm mới
+// Thêm sản phẩm
 app.post('/product', (req, res) => {
-    const product = req.body; // Lấy dữ liệu sản phẩm từ request body
-    console.log(product);     // Ghi log sản phẩm ra console (debug)
-    products.push(product);   // Thêm sản phẩm vào mảng
-    res.send('Product is added to the database'); // Gửi phản hồi thành công
+    const product = req.body;
+    products.push(product);
+    res.send('Product is added to the database');
 });
 
-// Lấy danh sách tất cả sản phẩm
+// Lấy danh sách sản phẩm
 app.get('/product', (req, res) => {
-    res.json(products); // Trả về toàn bộ danh sách sản phẩm dưới dạng JSON
+    res.json(products);
 });
 
-// Lấy thông tin sản phẩm theo ID
-app.get('/product/:id', (req, res) => {
-    const id = req.params.id; // Lấy ID từ URL parameter
-    // Tìm sản phẩm trong mảng
-    for (let product of products) {
-        if (product.id === id) {
-            return res.json(product); // Trả về sản phẩm nếu tìm thấy
-        }
-    }
-    res.status(404).send('Product not found'); // Trả về lỗi 404 nếu không tìm thấy
-});
-
-// Xóa sản phẩm theo ID
+// Xoá sản phẩm theo ID
 app.delete('/product/:id', (req, res) => {
-    const id = req.params.id; // Lấy ID từ URL parameter
-    // Lọc ra các sản phẩm không trùng ID
+    const id = req.params.id;
     products = products.filter(p => p.id !== id);
-    res.send('Product is deleted'); // Gửi phản hồi thành công
+    res.send('Product is deleted');
 });
 
-// Cập nhật sản phẩm theo ID
-app.post('/product/:id', (req, res) => {
-    const id = req.params.id; // Lấy ID từ URL parameter
-    const newProduct = req.body; // Lấy dữ liệu sản phẩm mới từ request body
-    // Tìm và cập nhật sản phẩm
-    for (let i = 0; i < products.length; i++) {
-        if (products[i].id === id) {
-            products[i] = newProduct; // Thay thế sản phẩm cũ bằng sản phẩm mới
-        }
+// Lưu đơn hàng và gửi đến Google Sheets
+app.post('/checkout', async (req, res) => {
+    const order = req.body;
+    orders.push(order);
+
+    try {
+        // Gửi dữ liệu đến Google Sheets
+        const response = await axios.post(
+            GOOGLE_SCRIPT_URL,
+            order,
+            {
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${SECRET_KEY}`
+                }
+            }
+        );
+        
+        console.log('Google Sheets response:', response.data);
+    } catch (error) {
+        console.error('Google Sheets error:', {
+            message: error.message,
+            response: error.response?.data
+        });
     }
-    res.send('Product is edited'); // Gửi phản hồi thành công
+
+    res.send('Order saved');
 });
 
-// =============================================
-// ROUTE: QUẢN LÝ ĐƠN HÀNG
-// =============================================
-
-// Lưu thông tin đơn hàng (checkout)
-app.post('/checkout', (req, res) => {
-    const order = req.body; // Lấy dữ liệu đơn hàng từ request body
-    orders.push(order);     // Thêm đơn hàng vào mảng lịch sử
-    res.send('Order saved'); // Gửi phản hồi thành công
-});
-
-// Lấy lịch sử tất cả đơn hàng
+// Lấy lịch sử giao dịch
 app.get('/checkout', (req, res) => {
-    res.json(orders); // Trả về toàn bộ lịch sử đơn hàng dưới dạng JSON
+    res.json(orders);
 });
 
-// =============================================
-// KHỞI ĐỘNG SERVER
-// =============================================
+// Khởi động server
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
