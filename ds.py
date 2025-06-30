@@ -46,7 +46,7 @@ LABEL_TO_ID = {
 }
 
 # Cấu hình server
-SERVER_URL = "https://four2000198.onrender.com/product"
+SERVER_URL = "https://four2000198-fruitdetection.onrender.com/product"
 HEADERS = {"Content-Type": "application/json"}
 
 # =============================================
