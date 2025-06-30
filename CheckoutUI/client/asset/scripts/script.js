@@ -8,7 +8,7 @@ var orderCounter = parseInt(localStorage.getItem('orderCounter')) || 0; // Lấy
 // HÀM XÓA SẢN PHẨM
 // =============================================
 const deleteProducts = async () => {
-    const url = 'https://four2000198.onrender.com/product';
+    const url = 'https://four2000198-fruitdetection.onrender.com/product';
 
     try {
         // Lấy danh sách sản phẩm hiện tại từ server
@@ -36,7 +36,7 @@ const deleteProducts = async () => {
 // HÀM TẢI VÀ HIỂN THỊ SẢN PHẨM
 // =============================================
 const loadProducts = async () => {
-    const url = 'https://four2000198.onrender.com/product';
+    const url = 'https://four2000198-fruitdetection.onrender.com/product';
 
     try {
         // Gọi API để lấy danh sách sản phẩm
@@ -110,7 +110,7 @@ const loadProducts = async () => {
 const checkout = async () => {
     // Hiển thị biểu tượng loading trên nút thanh toán
     document.getElementById('2').innerHTML = "<span class='loader-16' style='margin-left: 44%;'></span>";
-    const url = 'https://four2000198.onrender.com/product';
+    const url = 'https://four2000198-fruitdetection.onrender.com/product';
 
     try {
         // Lấy danh sách sản phẩm hiện tại
@@ -134,7 +134,7 @@ const checkout = async () => {
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
         
         // Gửi đơn hàng đến server để lưu lịch sử
-        await axios.post('https://four2000198.onrender.com/checkout', {
+        await axios.post('https://four2000198-fruitdetection.onrender.com/checkout', {
             products,
             timestamp: new Date().toISOString(),
             orderNumber: orderCounter,
