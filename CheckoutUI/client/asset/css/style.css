@@ -1,0 +1,370 @@
+/* Import font Poppins từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
+/* Biến CSS tùy chỉnh */
+:root {
+    --primary-h: 98; /* Màu chủ đạo - Hue */
+    --primary-s: 0%; /* Độ bão hòa màu */
+    --primary-l: 18%; /* Độ sáng màu */
+    --clr-accent: hsl(258, 71%, 61%); /* Màu nhấn */
+    --neutral-900: hsl(var(--primary-h) 0% 18%); /* Màu trung tính đậm */
+    --neutral-500: hsl(var(--primary-h) 0% 45%); /* Màu trung tính trung bình */
+    --neutral-400: hsl(var(--primary-h) 0% 85%); /* Màu trung tính nhạt */
+}
+
+/* Reset CSS cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Thiết lập chung cho hình ảnh */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Loại bỏ gạch chân liên kết */
+a {
+    text-decoration: none;
+}
+
+/* Utility class cho khoảng cách giữa các phần tử */
+.flow>*+* {
+    margin-top: var(--flow-spacer, var(--spacer));
+}
+
+/* Thiết lập kích thước trang */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin-top: 30px; /* Khoảng cách từ top */
+}
+
+/* Thiết lập body chính */
+body {
+    min-height: 100%;
+    min-width: 100%;
+    font-family: "Poppins", sans-serif; /* Sử dụng font Poppins */
+    color: var(--neutral-900); /* Màu chữ chính */
+    display: flex;
+    flex-direction: column;
+    justify-content: top; /* Căn nội dung lên trên */
+    align-items: center;
+    background-color: #ecf0f3 /* Màu nền chính */
+}
+
+/* Phần hiển thị animation Lottie */
+.lottie {
+    padding-top: 5%;
+    width: 35%;
+    height: 50%;
+    display: grid;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f3;
+    text-align: center;
+}
+
+/* Phần văn bản dưới animation */
+.text {
+    margin-top: -25%; /* Điều chỉnh vị trí */
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Phần nội dung chính */
+main {
+    display: none; /* Ẩn mặc định */
+    grid-gap: 30px; /* Khoảng cách giữa các item */
+    grid-template-columns: repeat(1, auto); /* Layout grid 1 cột */
+    grid-template-rows: repeat(1, auto);
+}
+
+/* Card hiển thị thông tin trái cây */
+.the-trai-cay {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 cột bằng nhau */
+    grid-template-rows: repeat(1, auto); /* 1 hàng */
+    grid-row-gap: 0.5rem;
+    grid-column-gap: 1rem;
+    align-content: center;
+    max-width: 100%;
+    background: #ecf0f3;
+    /* Hiệu ứng bóng đổ 3D */
+    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
+    border-radius: 5px;
+    padding: 15px 25px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+/* Các thành phần trong card sản phẩm */
+.ten-trai-cay, .gia-trai-cay, .so-luong, .thanh-tien {
+    display: inline-block;
+    align-self: center;
+    font-size: 1rem;
+    text-transform: uppercase; /* Chữ in hoa */
+    /* Hiệu ứng bóng đổ bên trong */
+    box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;
+    padding: 15px 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 800; /* Độ đậm chữ */
+}
+
+/* Vị trí các thành phần trong grid */
+.ten-trai-cay { grid-column: 2 / span 1; grid-row: 1; }
+.gia-trai-cay { 
+    grid-column: 3 / span 2; grid-row: 1; 
+    color: black; /* Màu chữ đen */
+}
+.so-luong { 
+    grid-column: 5 / span 1; grid-row: 1; 
+    color: black;
+    padding: 15px 25px;
+}
+.thanh-tien { 
+    grid-column: 6 / span 3; grid-row: 1; 
+    color: #01b356; /* Màu xanh lá nhấn mạnh */
+    padding: 15px 25px;
+}
+
+/* Ảnh sản phẩm */
+.anh-trai-cay {
+    display: inline-block;
+    grid-column: 1 / span 1;
+    grid-row: 1;
+    width: 110px;
+    height: 100px;
+    border-radius: 5px;
+    /* Hiệu ứng viền 3D */
+    box-shadow: 0px 0px 2px #5f5f5f, 0px 0px 0px 5px #ecf0f3, 8px 8px 15px #a7aaaf, -8px -8px 15px #fff;
+}
+
+/* Nhãn thông tin */
+.nhan-ten, .nhan-gia, .nhan-so-luong, .nhan-thanh-tien {
+    display: inline-block;
+    align-self: top;
+    font-size: 0.7rem; /* Kích thước chữ nhỏ */
+    padding-top: 5%; /* Khoảng cách từ top */
+    text-transform: uppercase; /* Chữ in hoa */
+    font-weight: 700; /* Độ đậm vừa */
+}
+
+/* Vị trí các nhãn trong grid */
+.nhan-ten { grid-column: 2 / span 1; grid-row: 1; padding-left: 8%; }
+.nhan-gia { grid-column: 3 / span 1; grid-row: 1; padding-left: 15%; }
+.nhan-so-luong { grid-column: 5 / span 1; grid-row: 1; padding-left: 15%; }
+.nhan-thanh-tien { grid-column: 6 / span 1; grid-row: 1; padding-left: 15%; }
+
+/* Phần tổng khối lượng */
+.tong-khoi-luong {
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #01b356; /* Màu xanh lá */
+    background: #ecf0f3;
+    padding: 25px 25px;
+    border-radius: 5px;
+    text-align: center;
+    /* Hiệu ứng bóng đổ bên trong */
+    box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff;
+    width: 300px;
+    height: 80px;
+}
+
+/* Nút thanh toán */
+.checkout {
+    display: none; /* Ẩn mặc định */
+    margin-top: 30px;
+    border: none;
+    align-self: center;
+    font-size: 1rem;
+    text-transform: uppercase; /* Chữ in hoa */
+    padding: 10%;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 800;
+    color: #ffffff; /* Chữ trắng */
+    background: #01b356; /* Nền xanh lá */
+    /* Hiệu ứng bóng đổ */
+    box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #fff;
+    cursor: pointer; /* Con trỏ tay khi hover */
+    width: 300px;
+    height: 80px;
+}
+
+/* Hiệu ứng khi di chuột qua nút */
+.checkout:hover {
+    box-shadow: 8px 8px 13px #b1b1b1, -8px -8px 13px #fff;
+    transition: 0.3s; /* Hiệu ứng mượt */
+}
+
+/* Phần hiển thị cuối */
+.final {
+    align-items: center;
+    color: rgba(255, 255, 255, .8); /* Màu chữ trắng trong suốt */
+}
+
+/* QR code */
+#image {
+    width: 400px;
+    height: 400px;
+    margin-top: 5%;
+    background-color: #ecf0f3;
+    align-self: center;
+    align-content: center;
+    max-width: 100%;
+    /* Hiệu ứng bóng đổ 3D */
+    box-shadow: 13px 13px 20px #cbced1, -13px -13px 20px #fff;
+    border-radius: 15px;
+    padding: 15px 25px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+/* Khu vực QR code */
+#qr {
+    display: none; /* Ẩn mặc định */
+    font-size: inherit;
+    text-align: center;
+    font-weight: 500;
+    position: absolute; /* Vị trí tuyệt đối */
+}
+
+/* Khu vực thông báo thành công */
+#success {
+    display: none; /* Ẩn mặc định */
+    font-size: inherit;
+    text-align: center;
+    font-weight: 500;
+    position: absolute;
+}
+
+/* Animation ripple effect */
+@keyframes ripple-animation {
+    from {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    to {
+        transform: scale(100);
+        opacity: 0;
+    }
+}
+
+/* Animation fade in từ dưới lên */
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0, 40px, 0)
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1
+    }
+}
+
+/* Phiên bản tương thích cho Webkit */
+@-webkit-keyframes fadeInUp {
+    from {
+        transform: translate3d(0, 40px, 0)
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1
+    }
+}
+
+/* Class animation chung */
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-fill-mode: both
+}
+
+.animatedFadeInUp {
+    opacity: 0
+}
+
+.fadeInUp {
+    opacity: 0;
+    animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+}
+
+/* Loader spinner */
+[class*="loader-"] {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    color: inherit;
+    vertical-align: middle;
+    pointer-events: none;
+    color: rgba(255, 255, 255, 1.0);
+}
+
+/* Thiết kế loader cụ thể */
+.loader-16 {
+    transform: rotateZ(45deg);
+    perspective: 1000px;
+    border-radius: 50%;
+}
+
+/* Tạo hiệu ứng spinner */
+.loader-16:before,
+.loader-16:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: 50%;
+    animation: 1s spin linear infinite; /* Animation quay */
+}
+
+.loader-16:before {
+    transform: rotateX(70deg);
+}
+
+.loader-16:after {
+    transform: rotateY(70deg);
+    animation-delay: 0.4s; /* Độ trễ animation */
+}
+
+/* Keyframes cho hiệu ứng quay */
+@keyframes rotate {
+    0% {
+        transform: translate(-50%, -50%) rotateZ(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotateZ(360deg);
+    }
+}
+
+@keyframes rotateccw {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(-360deg);
+    }
+}
+
+/* Keyframes cho hiệu ứng spinner */
+@keyframes spin {
+    0%, 100% { box-shadow: 0.2em 0px 0 0px currentcolor; }
+    12% { box-shadow: 0.2em 0.2em 0 0 currentcolor; }
+    25% { box-shadow: 0 0.2em 0 0px currentcolor; }
+    37% { box-shadow: -0.2em 0.2em 0 0 currentcolor; }
+    50% { box-shadow: -0.2em 0 0 0 currentcolor; }
+    62% { box-shadow: -0.2em -0.2em 0 0 currentcolor; }
+    75% { box-shadow: 0px -0.2em 0 0 currentcolor; }
+    87% { box-shadow: 0.2em -0.2em 0 0 currentcolor; }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Thanh toán</title>
+
+    <link rel="stylesheet" href="asset/css/style.css">
+
+    <script src="asset/scripts/script.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- DotLottie player -->
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+</head>
+
+<body>
+    <!-- Animation chờ -->
+    <div class="lottie" id="1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+        <dotlottie-player
+            src="https://lottie.host/06c43863-909f-41b4-b488-f5ee83e570e7/zvOzaimWDi.json"
+            background="transparent"
+            speed="1"
+            style="width: 300px; height: 300px; margin-bottom: 200px;"
+            loop autoplay>
+        </dotlottie-player>
+        <div class="text" style="font-size: 18px; text-align: center; font-weight: 600;">
+            VUI LÒNG ĐẶT TRÁI CÂY LÊN BÀN CÂN ĐỂ THANH TOÁN!
+        </div>
+    </div>
+
+    <!-- Main sản phẩm -->
+    <main id="home"></main>
+
+    <!-- Nút CHECKOUT -->
+    <div id="final">
+        <button id="2" class="checkout" onclick="checkout()">CHECKOUT</button>
+    </div>
+    
+    <div id="weight" class="tong-khoi-luong" style="display:none;">
+    </div>
+
+    <!-- QR code -->
+    <div id="qr" class="animated fadeInUp Once">
+        Quét mã QR để thanh toán!
+        <img id="image" src="" />
+    </div>
+
+    <!-- Animation thành công -->
+    <div id="success">
+        <dotlottie-player 
+            src="https://lottie.host/62879056-6b6a-40d5-9dd3-3a601ca3b51f/FyM3ykagsc.json" 
+            background="transparent" 
+            speed="1.25" 
+            style="width: 600px; height: 600px" 
+            loop autoplay>
+        </dotlottie-player>
+    </div>
+
+    <!-- Tự động load sản phẩm -->
+    <script>
+        window.onload = () => {
+            setInterval(function () {
+                loadProducts();
+            }, 100);
+        };
+    </script>
+
+</body>
+</html>

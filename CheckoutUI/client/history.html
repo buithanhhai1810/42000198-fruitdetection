@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lịch sử giao dịch</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 40px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 30px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    td:first-child {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    td img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .total-row td {
+      font-weight: bold;
+      text-align: center;
+      background-color: #17befa;
+      font-size: 16px;
+      color: white;
+    }
+
+    #exportExcel {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 20px;
+      transition: background-color 0.3s;
+    }
+
+    #exportExcel:hover {
+      background-color: #218838;
+    }
+
+    #exportExcel:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lịch sử giao dịch</h1>
+  <button id="exportExcel">Xuất Excel</button>
+  <div id="history"></div>
+
+  <script>
+    async function loadHistory() {
+      try {
+        const res = await axios.get('https://four2000198.onrender.com/checkout');
+        const orders = res.data;
+
+        let html = "";
+        if (orders.length === 0) {
+          html = "<p>Chưa có giao dịch nào</p>";
+          document.getElementById("exportExcel").disabled = true;
+        } else {
+          document.getElementById("exportExcel").disabled = false;
+        }
+
+        orders.forEach((order, index) => {
+          let totalPay = 0;
+          let totalWeight = 0;
+
+          html += `<h2>Đơn hàng ${index + 1}</h2>`;
+          html += `
+          <table>
+            <thead>
+              <tr>
+                <th>Tên sản phẩm</th>
+                <th>Giá trên trái</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th>Tổng khối lượng (g)</th>
+                <th>Thời gian</th>
+              </tr>
+            </thead>
+            <tbody>
+          `;
+
+          order.products.forEach(p => {
+            totalPay += parseFloat(p.payable);
+            totalWeight += parseFloat(p.total_weight || 0);
+
+            html += `
+              <tr>
+                <td>
+                  <img src="asset/img/${p.id}.jpg" alt="${p.name}">
+                  <span>${p.name}</span>
+                </td>
+                <td>${p.price} VND</td>
+                <td>${p.taken}</td>
+                <td>${p.payable} VND</td>
+                <td>${p.total_weight || 0}</td>
+                <td>${new Date(order.timestamp).toLocaleString()}</td>
+              </tr>
+            `;
+          });
+
+          html += `
+            <tr class="total-row">
+              <td colspan="6">Tổng thanh toán: ${totalPay} VND</td>
+            </tr>
+          </tbody>
+          </table>
+          `;
+        });
+
+        document.getElementById("history").innerHTML = html;
+      } catch (error) {
+        console.error("Lỗi khi tải lịch sử:", error);
+        document.getElementById("history").innerHTML = "<p style='color:red'>Lỗi khi tải dữ liệu. Vui lòng thử lại sau.</p>";
+        document.getElementById("exportExcel").disabled = true;
+      }
+    }
+
+    // Hàm xuất ra Excel
+    document.getElementById("exportExcel").addEventListener("click", exportToExcel);
+
+    function exportToExcel() {
+      const historyDiv = document.getElementById("history");
+      const tables = historyDiv.getElementsByTagName("table");
+      
+      if (tables.length === 0) {
+        alert("Không có dữ liệu để xuất!");
+        return;
+      }
+
+      // Tạo một workbook Excel mới
+      const wb = XLSX.utils.book_new();
+
+      // Duyệt qua từng bảng (mỗi đơn hàng là một bảng)
+      Array.from(tables).forEach((table, index) => {
+        // Chuyển đổi HTML Table thành sheet Excel
+        const ws = XLSX.utils.table_to_sheet(table);
+        
+        // Thêm sheet vào workbook
+        XLSX.utils.book_append_sheet(wb, ws, `Đơn ${index + 1}`);
+      });
+
+      // Xuất file Excel với tên chứa ngày hiện tại
+      const today = new Date().toISOString().split('T')[0];
+      XLSX.writeFile(wb, `Lich_su_giao_dich_${today}.xlsx`);
+    }
+
+    // Tải dữ liệu ban đầu và cập nhật định kỳ
+    loadHistory();
+    setInterval(loadHistory, 5000);
+  </script>
+</body>
+</html>
